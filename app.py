@@ -1,4 +1,8 @@
-# TODO: annotate and stlye plots, fix equity percent, print out down payment amoutn, add tab for buy and sell
+# TODO: make branch no_plot, annotate and stlye plots, fix equity percent, print out down payment amount, put plot calls in functions, add tab for buy and sell
+
+# tabs: buy, sell, compare 
+
+# plots go to long term mortgage modeler
 
 import streamlit as st
 import numpy as np
