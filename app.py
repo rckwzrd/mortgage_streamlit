@@ -2,7 +2,8 @@
 
 # tabs: buy, sell, compare 
 
-# plots go to long term mortgage modeler
+# plots go to long term mortgage modeler --> interactive or static?
+# make environment and requirements.txt, git ignore .env
 
 import streamlit as st
 import numpy as np
