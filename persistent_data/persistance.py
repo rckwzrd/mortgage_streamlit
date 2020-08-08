@@ -27,6 +27,7 @@ import streamlit as st
 
 import streamlit as st
 import SessionState
+
 state = SessionState.get(chat_list=[])
 
 name = st.sidebar.text_input("Name")

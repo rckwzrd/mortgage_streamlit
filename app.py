@@ -5,19 +5,23 @@
 # deploy to server 
 
 import streamlit as st
+import SessionState
 import numpy as np
 import pandas as pd
 
 def main():
     st.sidebar.title('Mortgage Modeler')
     mode = st.sidebar.selectbox('Select Mode', ['Buy','Sell','Compare','Summary','Introduction'])
-    data = dict() # will this be persistent? --> it is not persistent
+    state = SessionState.get(data=dict())
+    # data = dict() # will this be persistent? --> it is not persistent
+
     if mode == 'Buy':
         st.title("Buy Home")
-        data = buy_input(data)
-        data = total_payment(data)
-        buy_output(data)
-        st.write(data)
+        state.data = buy_input(state.data)
+        state.data = total_payment(state.data)
+        buy_output(state.data)
+        st.write(state.data)
+    
     elif mode == 'Sell':
         st.title('Sell Home')
         data = sell_input(data)
@@ -33,22 +37,22 @@ def main():
 
 # @st.cache(persist=True, allow_output_mutation=True, suppress_st_warning=True)
 def buy_input(data:dict):
-    data['home'] = st.sidebar.number_input('Home Value:', value=270000.0, step=10000.0, format='%.2f')
-    data['down'] = st.sidebar.number_input('Downpayment:', value=0.0, step=5000.0, format='%.2f')
-    data['loan'] = st.sidebar.number_input('Loan Amount:', value=(data['home']-data['down']), step=10000.0, format='%.2f')
-    data['rate'] = st.sidebar.number_input('Interest Rate:', value=0.0325, step=0.0005, format='%.4f')
-    data['tax'] = st.sidebar.number_input('Yearly Tax:',value=6000.0, step=250.0, format='%.2f') / 12
-    data['hoa'] = st.sidebar.number_input('Monthly HOA:', value=0.0, step=50.0, format='%.2f') 
-    data['insurance'] = st.sidebar.number_input('Yearly Home Insurance:', value=1000.0, step=250.0, format='%.2f') / 12    
-    return data
+    state.data['home'] = st.sidebar.number_input('Home Value:', value=270000.0, step=10000.0, format='%.2f')
+    state.data['down'] = st.sidebar.number_input('Downpayment:', value=0.0, step=5000.0, format='%.2f')
+    state.data['loan'] = st.sidebar.number_input('Loan Amount:', value=(data['home']-data['down']), step=10000.0, format='%.2f')
+    state.data['rate'] = st.sidebar.number_input('Interest Rate:', value=0.0325, step=0.0005, format='%.4f')
+    state.data['tax'] = st.sidebar.number_input('Yearly Tax:',value=6000.0, step=250.0, format='%.2f') / 12
+    state.data['hoa'] = st.sidebar.number_input('Monthly HOA:', value=0.0, step=50.0, format='%.2f') 
+    state.data['insurance'] = st.sidebar.number_input('Yearly Home Insurance:', value=1000.0, step=250.0, format='%.2f') / 12    
+    return state.data
 
 # @st.cache(persist=True, allow_output_mutation=True, suppress_st_warning=True)
 def total_payment(data:dict):
-    data['term'] = int(30 * 12)
-    data['rate_periodic'] = (1+data['rate'])**(1/12) - 1
-    data['periodic_payment'] = -1*np.pmt(data['rate_periodic'], data['term'], data['loan'])
-    data['total_payment'] = data['periodic_payment'] + data['hoa'] + data['tax'] + data['insurance']
-    return data 
+    state.data['term'] = int(30 * 12)
+    state.data['rate_periodic'] = (1+data['rate'])**(1/12) - 1
+    state.data['periodic_payment'] = -1*np.pmt(data['rate_periodic'], data['term'], data['loan'])
+    state.data['total_payment'] = data['periodic_payment'] + data['hoa'] + data['tax'] + data['insurance']
+    return state.data 
 
 def buy_output(data:dict):
     st.subheader(f"Estimated monthly mortgage : ${data['periodic_payment']:.2f}")
