@@ -4,6 +4,8 @@
 # implement downpayment and interest plots with altair
 # deploy to server 
 # version 2: long term modeling
+# get jupyter related packages out of req txt
+# redo venv for wsl2
 
 # DONE:
 # convert to single page with side bar, persistent is not working yet
