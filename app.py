@@ -1,42 +1,37 @@
-# TODO:
-# style main page with markdown
-# implement check boxes 
-# implement downpayment and interest plots with altair
-# deploy to server 
-# version 2: long term modeling
-# get jupyter related packages out of req txt
-# redo venv for wsl2
-
-# DONE:
-# convert to single page with side bar, persistent is not working yet
-# make environment and requirements.txt, git ignore .env
-# implement comparison, need current mortgage 
-# refractor functions to helpers.py 
-
 import streamlit as st
 import helper
+import explore_monthly_payment
 
 def main():
     st.title('Mortgage Modeler')
-    data = dict() 
+    data = dict()
 
-    st.sidebar.subheader("Buy Home")
-    data = helper.buy_input(data)
-    data = helper.total_payment(data)
-    helper.buy_output(data)
-    
-    st.sidebar.subheader('Sell Home')
-    data = helper.sell_input(data)
-    data = helper.sell_cost(data)
-    helper.sell_output(data)
+    mode = st.sidebar.selectbox("Select Mode", ["Detailed Buy/Sell", "Explore Monthly Payment"])
+    if mode == "Detailed Buy/Sell":
+        st.sidebar.subheader("Detailed Buy Home")
+        data = helper.buy_input(data)
+        data = helper.total_payment(data)
+        helper.buy_output(data)
+        
+        st.sidebar.subheader('Sell Home')
+        data = helper.sell_input(data)
+        data = helper.sell_cost(data)
+        helper.sell_output(data)
 
-    data = helper.comparison(data)
-    helper.compare_output(data)
+        data = helper.comparison(data)
+        helper.compare_output(data)
 
-    st.text('Implement downpayment plot') 
-    st.text('Implement rate plot') 
+        st.write(data)
 
-    st.write(data)
+    elif mode == "Explore Monthly Payment":
+        st.sidebar.subheader("Explore Monthly Payment")
+        data = explore_monthly_payment.buy_input(data)
+        st.subheader(f"Home price = ${data['home']:.2f}")
+        data = explore_monthly_payment.model_monthly_payments(data)
+        # st.line_chart(data["down_payments"], data["monthly_payments"])
+
+        st.write(data)
 
 if __name__ == '__main__':
     main()
+
