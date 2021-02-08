@@ -10,25 +10,39 @@ def model_payments(data:dict):
 
 # %%
 import numpy as np
+import pandas as pd
 
-def model_monthly_payments(data):
+def model_monthly_payments():
+    house_price = 350000
+    rate =0.0325
+    tax = 5000
+    hoa = 100
+    insurance = 1000
 
-    house_price = float(350000)
-    rate = 0.0325
     term = float(30 * 12)
     periodic_rate = (1+rate)**(1/12) - 1
 
-    down_payments = np.arange(0.0, 100000, 1000)
-    loan_amount = house_price - down_payments
-    monthly_payments = np.zeros(down_payments.shape)
+    dp = np.arange(0.0, 100000, 1000)
+    loan = house_price - dp
+    mp = np.zeros(dp.shape)
 
-    for i in range(len(down_payments)):
-        monthly_payments[i] = -1*np.pmt(periodic_rate, term, loan_amount[i])
-        print(monthly_payments[i])
+    for i in range(len(dp)):
+        mp[i] = -1*np.pmt(periodic_rate, term, loan[i])
 
-    data["down_payments"] = down_payments
-    data["monthly_payments"] = monthly_payments
+    total_mp = mp + tax + hoa + insurance
 
-    return data
+    merged = np.column_stack((loan, dp, mp, total_mp))
+    print(merged.shape)
+    df = pd.DataFrame(
+        (loan, dp, mp, total_mp), 
+        columns=["Loan", "Down_Pay", "Prnpl_Int", "Total"]
+    )
+    print(df.info())
+
+
+model_monthly_payments()
+
+
+# %%
 
 # %%

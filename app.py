@@ -28,9 +28,10 @@ def main():
         data = explore_monthly_payment.buy_input(data)
         st.subheader(f"Home price = ${data['home']:.2f}")
         data = explore_monthly_payment.model_monthly_payments(data)
-        # st.line_chart(data["down_payments"], data["monthly_payments"])
+        explore_monthly_payment.plot_payments(data)
 
         st.write(data)
+
 
 if __name__ == '__main__':
     main()
