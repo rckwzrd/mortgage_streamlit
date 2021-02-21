@@ -31,7 +31,7 @@ def model_payments(data: dict):
     periodic_rate = (1+rate)**(1/12) - 1
 
     dp = np.arange(0.0, 100000, 10000)
-    payments = {"down": dp}
+    payments = {"DOWN_PMT": dp}
 
     for h in hp:
         mp = np.zeros(dp.shape)
@@ -47,6 +47,29 @@ def model_payments(data: dict):
     data["payments"] = pd.DataFrame(payments)
 
     return data
+
+# TODO: Format dataframe $, drop index, params and prices to table?
+def model_output(data):
+ 
+    # NOTE: this feels like a hack, should it be lambda?
+    def highlight(df):
+        if df["DOWN_PMT"] == 50000:
+            return ['color: blue']*4
+        else:
+            return ['color: black']*4
+
+    st.subheader("Home List Prices:")
+    c = 1
+    for h in data["home"]:
+        st.text(f"Home {c}: ${h}")
+        c += 1
+
+
+    st.subheader("Parameters")
+    st.text(f"Interest Rate: {data['rate']}%, Tax: ${data['tax']*12}, HOA: ${data['hoa']}, Insurance: ${data['insr']:.2f}")
+
+    st.subheader("Payment Range")
+    st.table(data['payments'].style.apply(highlight, axis=1))
 
 
 # def plot_payments(data: dict):

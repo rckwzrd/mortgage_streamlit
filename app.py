@@ -2,6 +2,7 @@ import streamlit as st
 import detailed_costs
 import monthly_payments
 
+
 def main():
     st.title('Mortgage Modeler')
     data = dict()
@@ -29,9 +30,7 @@ def main():
         st.sidebar.subheader("Compare Monthly Payments")
         data = monthly_payments.buy_input(data)
         data = monthly_payments.model_payments(data)
-
-        st.write(data)
-        st.write(data['payments'])
+        monthly_payments.model_output(data)
 
 
 if __name__ == '__main__':
