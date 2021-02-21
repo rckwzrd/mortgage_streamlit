@@ -1,9 +1,10 @@
 import streamlit as st
 
 import numpy as np
+import numpy_financial as npf
 import pandas as pd
 
-import plotly.graph_objects as go
+# import plotly.graph_objects as go
 
 def buy_input(data: dict):
     h1 = st.sidebar.number_input('Home 1:', value=300000.0, step=10000.0, format='%.2f')
@@ -37,7 +38,7 @@ def model_payments(data: dict):
 
         for i in range(len(dp)):
             loan = h - dp[i]
-            mp[i] = -1*np.pmt(periodic_rate, term, loan)
+            mp[i] = -1*npf.pmt(periodic_rate, term, loan)
 
         mp = mp + tax + hoa + insr
 
@@ -48,21 +49,21 @@ def model_payments(data: dict):
     return data
 
 
-def plot_payments(data: dict):
-    df = data["payments"]
+# def plot_payments(data: dict):
+#     df = data["payments"]
 
-    fig = go.Figure()
+#     fig = go.Figure()
 
-    for col in df.columns.values.tolist():
+#     for col in df.columns.values.tolist():
 
-        if col != "down":
-            trace = go.Scatter(
-                x=df["down"],
-                y=df[col],
-                name=col,
-                hovertemplate=f"{col}<extra></extra>"
-            )
+#         if col != "down":
+#             trace = go.Scatter(
+#                 x=df["down"],
+#                 y=df[col],
+#                 name=col,
+#                 hovertemplate=f"{col}<extra></extra>"
+#             )
 
-            fig.add_trace(trace)
+#             fig.add_trace(trace)
 
-    st.plotly_chart(fig)
+#     st.plotly_chart(fig)

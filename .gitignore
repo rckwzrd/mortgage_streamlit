@@ -1,6 +1,3 @@
 .vscode
-.ipynb_checkpoints
 proj
 __pycache__
-mortgage.ipynb
-test.py

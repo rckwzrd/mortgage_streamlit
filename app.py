@@ -6,7 +6,7 @@ def main():
     st.title('Mortgage Modeler')
     data = dict()
 
-    mode = st.sidebar.selectbox("Select Mode", ["Start", "Detailed Costs", "Monthly Payments"])
+    mode = st.sidebar.selectbox("Select Mode", ["Start", "Detailed Costs", "Compare Payments"])
     
     if mode == "Start":
         st.subheader("Print some info about app usage")
@@ -25,15 +25,13 @@ def main():
         data = detailed_costs.comparison(data)
         detailed_costs.compare_output(data)
 
-    elif mode == "Monthly Payments":
-        st.sidebar.subheader("Explore Monthly Payment")
+    elif mode == "Compare Payments":
+        st.sidebar.subheader("Compare Monthly Payments")
         data = monthly_payments.buy_input(data)
         data = monthly_payments.model_payments(data)
-        monthly_payments.plot_payments(data)
 
         st.write(data)
         st.write(data['payments'])
-
 
 
 if __name__ == '__main__':
