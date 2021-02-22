@@ -6,16 +6,17 @@ import pandas as pd
 
 # import plotly.graph_objects as go
 
+
 def buy_input(data: dict):
-    h1 = st.sidebar.number_input('Home 1:', value=300000.0, step=10000.0, format='%.2f')
-    h2 = st.sidebar.number_input('Home 2:', value=350000.0, step=10000.0, format='%.2f')
-    h3 = st.sidebar.number_input('Home 3:', value=400000.0, step=10000.0, format='%.2f')
+    h1 = st.sidebar.number_input('Home 1:', value=275000.0, step=10000.0, format='%.2f')
+    h2 = st.sidebar.number_input('Home 2:', value=325000.0, step=10000.0, format='%.2f')
+    h3 = st.sidebar.number_input('Home 3:', value=350000.0, step=10000.0, format='%.2f')
     data['home'] = [h1, h2, h3]
 
     data['rate'] = st.sidebar.number_input('Interest Rate:', value=0.0325, step=0.0005, format='%.4f')
     data['tax'] = st.sidebar.number_input('Yearly Tax:',value=6000.0, step=250.0, format='%.2f') / 12
     data['hoa'] = st.sidebar.number_input('Monthly HOA:', value=0.0, step=50.0, format='%.2f') 
-    data['insr'] = st.sidebar.number_input('Yearly Home Insurance:', value=1000.0, step=250.0, format='%.2f') / 12 
+    data['insr'] = st.sidebar.number_input('Yearly Home Insurance:', value=1000.0, step=250.0, format='%.2f') / 12
 
     return data
 
@@ -30,7 +31,7 @@ def model_payments(data: dict):
     term = float(30 * 12)
     periodic_rate = (1+rate)**(1/12) - 1
 
-    dp = np.arange(0.0, 100000, 10000)
+    dp = np.arange(0.0, 110000, 10000)
     payments = {"DOWN_PMT": dp}
 
     for h in hp:
@@ -48,29 +49,33 @@ def model_payments(data: dict):
 
     return data
 
-# TODO: Format dataframe $, drop index, params and prices to table?
+
+def highlight(df):
+    if df["DOWN_PMT"] == 50000:
+        return ['color: blue']*4
+    else:
+        return ['color: black']*4
+
+
 def model_output(data):
- 
-    # NOTE: this feels like a hack, should it be lambda?
-    def highlight(df):
-        if df["DOWN_PMT"] == 50000:
-            return ['color: blue']*4
-        else:
-            return ['color: black']*4
-
     st.subheader("Home List Prices:")
-    c = 1
-    for h in data["home"]:
-        st.text(f"Home {c}: ${h}")
-        c += 1
-
+    st.text(f"Home 1: ${data['home'][0]}")
+    st.text(f"Home 2: ${data['home'][1]}")
+    st.text(f"Home 3: ${data['home'][2]}")
 
     st.subheader("Parameters")
-    st.text(f"Interest Rate: {data['rate']}%, Tax: ${data['tax']*12}, HOA: ${data['hoa']}, Insurance: ${data['insr']:.2f}")
+    st.text(f"Interest Rate: {data['rate']}% APR")
+    st.text(f"Tax: ${data['tax']*12} per year")
+    st.text(f"HOA: ${data['hoa']} per month")
+    st.text(f"Insurance: ${data['insr']:.2f} per month")
 
     st.subheader("Payment Range")
-    st.table(data['payments'].style.apply(highlight, axis=1))
+    df = data["payments"]
+    st.write(df.style.apply(highlight, axis=1).format("${0:,.0f}"))
 
+    st.subheader("Payment Difference")
+    diff_df = pd.DataFrame(df.diff().mean().abs()).T
+    st.write(diff_df.style.format("${0:,.0f}"))
 
 # def plot_payments(data: dict):
 #     df = data["payments"]
