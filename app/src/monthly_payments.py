@@ -13,8 +13,9 @@ def buy_input(data: dict):
     h3 = st.sidebar.number_input('Home 3:', value=350000.0, step=10000.0, format='%.2f')
     data['home'] = [h1, h2, h3]
 
+    data['term'] = st.sidebar.number_input('Term:', value=30, step=5)
     data['rate'] = st.sidebar.number_input('Interest Rate:', value=0.0325, step=0.0005, format='%.4f')
-    data['tax'] = st.sidebar.number_input('Yearly Tax:',value=6000.0, step=250.0, format='%.2f') / 12
+    data['tax'] = st.sidebar.number_input('Yearly Tax:', value=6000.0, step=250.0, format='%.2f') / 12
     data['hoa'] = st.sidebar.number_input('Monthly HOA:', value=0.0, step=50.0, format='%.2f') 
     data['insr'] = st.sidebar.number_input('Yearly Home Insurance:', value=1000.0, step=250.0, format='%.2f') / 12
 
@@ -27,8 +28,8 @@ def model_payments(data: dict):
     tax = data["tax"]
     hoa = data["hoa"]
     insr = data["insr"]
+    term = float(data["term"] * 12)
 
-    term = float(30 * 12)
     periodic_rate = (1+rate)**(1/12) - 1
 
     dp = np.arange(0.0, 110000, 10000)
@@ -64,6 +65,7 @@ def model_output(data):
     st.text(f"Home 3: ${data['home'][2]}")
 
     st.subheader("Parameters")
+    st.text(f"Term: {data['term']} years")
     st.text(f"Interest Rate: {data['rate']}% APR")
     st.text(f"Tax: ${data['tax']*12} per year")
     st.text(f"HOA: ${data['hoa']} per month")
