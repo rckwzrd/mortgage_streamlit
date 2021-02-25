@@ -6,6 +6,29 @@ COPY requirements.txt requirements.txt
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY app ./
+COPY app/ ./
 
-CMD ["sh", "-c", "streamlit run --server.port 8000 /usr/app/src/main.py"]
+EXPOSE 80
+
+# ENTRYPOINT [ "streamlit", "run", "src/app.py", \
+#              "--browser.serverAddress", "0.0.0.0" \
+#              "--server.enableCORS", "False", \
+#              "server.port", "80"]
+
+CMD ["sh", "-c", "streamlit run --browser.serverAddress 0.0.0.0 --server.enableCORS False --server.port 80 /usr/app/src/main.py" ]
+
+
+
+# FROM python:3.8-slim
+
+# WORKDIR /usr/src/app
+
+# EXPOSE 8501
+
+# COPY requirements.txt requirements.txt
+
+# RUN pip install --no-cache-dir -r requirements.txt
+
+# COPY app ./
+
+# CMD ["sh", "-c", "streamlit run /usr/app/src/main.py"]

@@ -2,8 +2,10 @@ version: "3"
 
 services:
   app:
-    image: mortgage-streamlit
-    container_name: mortgage-streamlit
+    image: mrtg-test
+    container_name: mrtg-test
+    ports: 
+    - 80:80
     build: 
       dockerfile: ./Dockerfile
       context: .
