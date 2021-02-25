@@ -1,6 +1,6 @@
 import streamlit as st
-import src.detailed_costs as detailed_costs
-import src.monthly_payments as monthly_payments
+import common.detailed_costs as detailed_costs
+import common.monthly_payments as monthly_payments
 
 
 def main():
