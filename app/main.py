@@ -1,11 +1,12 @@
 import streamlit as st
 import common.detailed_costs as detailed_costs
 import common.monthly_payments as monthly_payments
+import common.compare_terms as compare_terms
 
 
 def main():
     st.title('Mortgage Modeler')
-    modes = ["Start", "Detailed Costs", "Compare Payments", "Compare Mortgage Terms"]
+    modes = ["Start", "Detailed Costs", "Compare Payments", "Compare Terms"]
     mode = st.sidebar.selectbox("Select Mode", modes)
     data = dict()
 
@@ -20,6 +21,7 @@ def main():
         st.write("Mortgage background: https://en.wikipedia.org/wiki/Compound_interest")
         st.write("Containerized with Docker: https://www.docker.com")
         st.write("Deployed with AWS Elastic Beanstalk: https://aws.amazon.com/elasticbeanstalk/")
+        st.subheader("Disclaimer: This is not official financial advice!")
 
     elif mode == "Detailed Costs":
         st.sidebar.subheader("Buy Home")
@@ -41,9 +43,11 @@ def main():
         data = monthly_payments.model_payments(data)
         monthly_payments.model_output(data)
 
-    elif mode == "Compare Mortgage Terms":
-        st.sidebar.subheader("Compare Mortgage Terms")
-        st.subheader("Not Implemented")
+    elif mode == "Compare Terms":
+        st.sidebar.subheader("Compare Terms")
+        data = compare_terms.input_terms(data)
+        data = compare_terms.model_terms(data)
+        compare_terms.model_output(data)
 
 
 if __name__ == '__main__':
